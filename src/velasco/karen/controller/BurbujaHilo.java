@@ -3,11 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package velasco.karen.test1;
-
-import java.util.ArrayList;
-
-import archivosutilidades.ArchivoUtilidades;
+package velasco.karen.controller;
 
 /**
  *
@@ -35,43 +31,41 @@ public class BurbujaHilo extends Thread{
     }
     
     public void run(){
-        Integer aux;
-        
-        System.out.println("Hilo "+id+" -------------------------------------------> numero de elementos: "+tamanio);
-        
-        for(int i=0; i<tamanio;i++){
-            for(int j=0; j<((tamanio)-1);j++){
-                if(lista[j]>lista[j+1]){
-                    aux = lista[j];
-                    lista[j]=lista[j+1];
-                    lista[j+1]= aux;
+        if(this.getTamanio()>15000) {
+        	SuperBurbuja superBurbuja = new SuperBurbuja(this.getLista());
+        	superBurbuja.start();
+        }else {
+        	Integer aux;
+            System.out.println("Hilo "+id+" -------------------------------------------> numero de elementos: "+tamanio);
+            
+            for(int i=0; i<tamanio;i++){
+                for(int j=0; j<((tamanio)-1);j++){
+                    if(lista[j]>lista[j+1]){
+                        aux = lista[j];
+                        lista[j]=lista[j+1];
+                        lista[j+1]= aux;
+                    }
                 }
             }
+            
+            System.out.println("Hilo "+id+" is out of the bubble");
+            
+            Integer k=0;
+            for(int i=this.pInicial; i<=this.pFinal;i++){
+                oLista[i] = lista[k];
+                k++;
+            }
+            this.tareaFinalizada = true;
+            
+            try {
+            	this.tareaFinalizada=true;
+                System.out.println("Hilo "+id+" is dead*************************************************************************");
+                Thread.interrupted();
+            } catch (Exception e) {
+            }
         }
-        
-        System.out.println("Hilo "+id+" is out of the bubble");
-        /*
-        String[] resultado = new String[this.getTamanio()];
-        for(int i=0; i<this.getTamanio(); i++) {
-        	resultado[i] = String.valueOf(lista[i]);
-        }
-        
-        String dir = System.getProperty("user.dir");
-        ArchivoUtilidades.escribirLineas(dir + "/src/resultado"+this.getId()+".txt", resultado);
-        */
-        Integer k=0;
-        for(int i=this.pInicial; i<=this.pFinal;i++){
-            oLista[i] = lista[k];
-            k++;
-        }
-        this.tareaFinalizada = true;
-        
-        try {
-        	this.tareaFinalizada=true;
-            System.out.println("Hilo "+id+" is dead*************************************************************************");
-            Thread.interrupted();
-        } catch (Exception e) {
-        }
+    	
+    	
     }
 
     public boolean isTareaFinalizada() {
